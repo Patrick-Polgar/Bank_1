@@ -1,2 +1,4 @@
 # Bank_1
-Easy bank account task with Daniel
+# easy bank account task with Daniel
+
+# written in eglish but commented in hungarian
