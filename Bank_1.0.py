@@ -2,12 +2,18 @@
 
 
 class Bank_Account:
-    def __init__(self, name, cash):
+    bank_accounts_dict = {}
+    def __init__(self, name, password, cash):
         self.name = name   # ide ementi el a felhasználó nevét
+        self.password = password
         self.cash = cash   # ide tárolja el mennyi pénz van a számlán
         self.log_ls = []   # lista a számlán történt változásokról
+        Bank_Account.bank_accounts_dict[self.name] = {
+             "password": self.password,
+             "cash": self.cash,
+             "log_ls": self.log_ls
+        }
         self.log_ls.append(f"{self.name} létrehozott egy bankfiókot {self.cash} HUF-al")
-  
 
     def print_info(self):
         print(f"{self.name} számla egyenlege {self.cash} HUF")
@@ -23,16 +29,31 @@ class Bank_Account:
     def log(self):
         for entry in self.log_ls:
             print(entry)
+   
+    def print_nice(self, bank_accounts_dict):
+        print("\n\n")
+        print(f"Regisztrált bankszámlák összesen: {len(bank_accounts_dict)}")
+        print("\n")
+        print("A számlák és az egyenlegek:")
+        for account_name, account_details in bank_accounts_dict.items():
+            print(f"{account_name} ({account_details['cash']})")
+        print("\n")
+        print("Tranzakció logok:")
+        for account_name, account_details in bank_accounts_dict.items():
+            print(f"\n{account_name}:")
+            for log in account_details['log_ls']:
+                print(f" - {log}")
 
 
+ 	
 ## Példa az elsö számla letrehozására Patriknak:
 # account = Bank_Account("Patrik Polgar", 1000.0)
 
 
 # Létrehoztunk 3 új számlát
-pisti_account = Bank_Account("Pisti", 30000)
-maris_account = Bank_Account("Máris", 50000)
-boborjan_account = Bank_Account("Boborján", 10000)
+pisti_account = Bank_Account("Pisti", 30000, cash=30000)
+maris_account = Bank_Account("Máris", 50000, cash=50000)
+boborjan_account = Bank_Account("Boborján", 10000, cash=10000)
 
 
 ## Ellenörizni, hogy a példány létrejött-e 
@@ -77,3 +98,6 @@ print("Az aktuális számlaegyenlegek: ")
 pisti_account.print_info()
 maris_account.print_info()
 boborjan_account.print_info()
+
+bank_account_dict = {"Boborján": {"password": "", "cash": 1000, "log_ls": ["hjgjhg", "hkgjhg"]}}
+bank_account_dict["Boborján"].print_nice()
