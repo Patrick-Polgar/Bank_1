@@ -1,5 +1,6 @@
 """ Bank_1.py """
 
+import json
 
 class Bank_Account:
     bank_accounts_dict = {}
@@ -36,7 +37,8 @@ class Bank_Account:
         print("\n")
         print("A számlák és az egyenlegek:")
         for account_name, account_details in bank_accounts_dict.items():
-            print(f"{account_name} ({account_details['cash']})")
+             print(f"{account_name} ({account_details.cash})")
+	   
         print("\n")
         print("Tranzakció logok:")
         for account_name, account_details in bank_accounts_dict.items():
@@ -44,16 +46,60 @@ class Bank_Account:
             for log in account_details['log_ls']:
                 print(f" - {log}")
 
+	# Elmentjük a bank_accounts_dict-et a bank_accounts.json fájlba
+    def save_to_file(bank_account_dict):
+        with open("bank_accounts.json", "w") as file:
+            bank_accounts = [vars(ba) for ba in bank_account_dict.values()]
+            json.dump(bank_accounts, file)
 
- 	
+	# Betöltjük a bank_accounts_dict-et a bank_accounts.json fájlból
+    def load_from_file():
+    	bank_account_dict = {}
+    	with open("bank_accounts.json", "r") as file:
+       	    bank_accounts = json.load(file)
+            for ba in bank_accounts:
+                ba_obj = Bank_Account(ba['owner_name'], ba['balance'])
+                ba_obj.log_ls = ba['log_ls']
+                bank_account_dict[ba_obj.owner_name] = ba_obj
+return bank_account_dict
+
+
+# bank_account_dict = load_from_file()
+#  if len(bank_account_dict) == 0:
+#     bank_account_dict["Pisti"] = Bank_Account("Pisti", 30000)
+#    bank_account_dict["Máris"] = Bank_Account("Máris", 25000)
+#     bank_account_dict["Boborján"] = Bank_Account("Boborján", 47000)
+
+def load_bank_accounts():
+    try:
+        with open("bank_accounts.json", "r") as file:
+            bank_account_dict = json.load(file)
+        for ba_name, ba in bank_account_dict.items():
+            ba_obj = Bank_Account(ba_name)
+            ba_obj.balance = ba['balance']
+            ba_obj.log_ls = ba['log_ls']
+            bank_account_dict[ba_name] = ba_obj
+        return bank_account_dict
+    except FileNotFoundError:
+        print("File not found")
+        return {}
+    
+if len(bank_account_dict) == 0:
+    bank_account_dict = load_bank_accounts()
+
+print("Regisztrált bankszámlák összesen:", Bank_Account.bank_account_counter)
+
+# bank_account_dict["Pisti"].deposit(25000)
+# bank_account_dict["Pisti"].deposit
+         
 ## Példa az elsö számla letrehozására Patriknak:
 # account = Bank_Account("Patrik Polgar", 1000.0)
 
 
-# Létrehoztunk 3 új számlát
-pisti_account = Bank_Account("Pisti", 30000, cash=30000)
-maris_account = Bank_Account("Máris", 50000, cash=50000)
-boborjan_account = Bank_Account("Boborján", 10000, cash=10000)
+## Létrehoztunk 3 új számlát
+# pisti_account = Bank_Account("Pisti", 30000, cash=30000)
+# maris_account = Bank_Account("Máris", 50000, cash=50000)
+# boborjan_account = Bank_Account("Boborján", 10000, cash=10000)
 
 
 ## Ellenörizni, hogy a példány létrejött-e 
@@ -67,16 +113,16 @@ boborjan_account = Bank_Account("Boborján", 10000, cash=10000)
 # account.income(200)
 
 
-# Tranzakciók az új számláknak (kertészeti megbízás Máris szomszédtól és Pisti fizetése)
-maris_account.withdraw(25000)
-pisti_account.income(25000)
+## Tranzakciók az új számláknak (kertészeti megbízás Máris szomszédtól és Pisti fizetése)
+# maris_account.withdraw(25000)
+# pisti_account.income(25000)
 
-pisti_account.income(80000)
+# pisti_account.income(80000)
 
-# Továbbbi tranzakciók (Pista kiadásai: éttermi ebéd és elromlott mosógép, Boborján megbizása)
-pisti_account.withdraw(2500)
-pisti_account.withdraw(37000)
-boborjan_account.income(37000)
+## Továbbbi tranzakciók (Pista kiadásai: éttermi ebéd és elromlott mosógép, Boborján megbizása)
+# pisti_account.withdraw(2500)
+# pisti_account.withdraw(37000)
+# boborjan_account.income(37000)
 
 
 ## Ellenörizni az egyenleget és tranzakció logot Patriknak
@@ -88,16 +134,16 @@ boborjan_account.income(37000)
 ## Ellenörizni az egyenleget és tranzakció logot az új számláknak
 # print("Pisti számla egyenlege: ")
 # pisti_account.print_info()
-print("Pisti tranzakció logja: ")
-pisti_account.log()
+# print("Pisti tranzakció logja: ")
+# pisti_account.log()
 
 
-# A számlák egyenlegének kiírása (Pisti, Máris, Boborján)
+## A számlák egyenlegének kiírása (Pisti, Máris, Boborján)
 
-print("Az aktuális számlaegyenlegek: ")
-pisti_account.print_info()
-maris_account.print_info()
-boborjan_account.print_info()
+# print("Az aktuális számlaegyenlegek: ")
+# pisti_account.print_info()
+# maris_account.print_info()
+# boborjan_account.print_info()
 
-bank_account_dict = {"Boborján": {"password": "", "cash": 1000, "log_ls": ["hjgjhg", "hkgjhg"]}}
-bank_account_dict["Boborján"].print_nice()
+# bank_accounts_dict = {"Pisti": pisti_account, "Máris": maris_account, "Boborján": boborjan_account}
+# bank_accounts_dict[""].print_nice(bank_accounts_dict)
